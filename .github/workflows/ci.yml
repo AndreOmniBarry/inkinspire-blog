@@ -27,7 +27,7 @@ jobs:
       HASH_SALT: ci-salt-ci-salt-00
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
@@ -59,7 +59,7 @@ jobs:
       BETTER_AUTH_SECRET: e2e-secret-e2e-secret-e2e-secret-e2e-secret
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
