@@ -91,3 +91,29 @@ Each entry: context, decision, consequences. Conflicts between the blueprint and
 - **Spam:** Cloudflare Turnstile (free), honeypots, database-backed rate limits.
 - **Search:** PostgreSQL full-text search + `pg_trgm`; no paid search service.
 - **TypeScript 5.9** (the version `create-next-app` 16.4 installs) rather than 7.0, whose native compiler Next.js's type-checking does not yet use. Revisit on the next Next.js minor.
+
+---
+
+## ADR-009: Real 404s and 403s are decided in the proxy
+
+**Context.** With Cache Components and partial prefetching, Next.js can send a page's shell before the page decides "not found" or "forbidden", leaving a 200 status (a "soft 404"), which is bad for SEO and for honest access control.
+
+**Decision.** `src/proxy.ts` (Node.js runtime) returns a real **403** for Studio areas the role may not use, redirects signed-out visitors and forces first-sign-in setup, and returns a real **404** for unknown story, theme, tag, series, author and policy addresses, using a small in-memory address index (refreshed every minute and on a miss, so new stories are found immediately). Pages and actions still check permissions themselves (defence in depth). Verified by `tests/e2e/permissions.spec.ts` and direct status checks.
+
+## ADR-010: Dynamic public pages may block on their first render
+
+**Context.** Stories published after a deploy returned **500**: their page read the address outside a loading boundary, which Next.js 16 allows only for addresses known at build time.
+
+**Decision.** `export const instant = false` on every public page with a variable address. The first visit to a new address waits for its data (one database round trip), then the result is cached like any other page. Regression-tested by the publishing and scheduling end-to-end tests, which visit stories created after the build.
+
+## ADR-011: Chart colours are their own tokens
+
+The brand accent (oxblood) fails the dataviz palette checks for chart lines (too dark for the lightness band), so charts use `--chart-1` / `--chart-2`, validated with the dataviz palette validator in every theme (lightness band, chroma, colour-vision-deficiency separation, contrast) and included in `pnpm check:contrast`. Charts have tooltips, a legend, a direct label on the latest value and a table view.
+
+## ADR-012: JavaScript budget (conflict recorded)
+
+**Brief §9:** initial JavaScript on a story page ≤ 100 KB gzipped. **Blueprint §8.4:** optimise scripts and loading.
+
+**Measured (Lighthouse 13, simulated mobile, November 2026):** 169 KB transferred on a story page, of which about **140 KB is the framework itself** (React DOM 19 + the Next.js 16 App Router runtime) and about **25 KB is Inkinspire's own code** (theme switcher, consent, newsletter form, reading controls, share and bookmark buttons). The 100 KB total is below the floor of the stack the brief itself chose.
+
+**Decision.** Keep the framework; hold our own code to a small budget (≤ 35 KB gzipped on a story page) and keep every interactive element a small island. The blueprint requirement (speed) is met by measurement: performance 95 (home), 98 (story), 99 (category); LCP 0.9–1.0 s; CLS 0; TBT 90–270 ms. Revisit if React or Next.js shrink their runtime.

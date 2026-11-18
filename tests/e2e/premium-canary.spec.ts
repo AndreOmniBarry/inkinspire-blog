@@ -17,7 +17,12 @@ async function fetchAll(request: APIRequestContext) {
   out.sitemap = await (await request.get("/sitemap.xml")).text();
   out.home = await (await request.get("/")).text();
   out.stories = await (await request.get("/stories")).text();
-  out.og = (await (await request.get(`${STORY}/opengraph-image`)).body()).toString("latin1");
+  // The share image lives at a hashed address; read it from the page's og:image tag.
+  const ogUrl = /<meta property="og:image" content="([^"]+)"/.exec(out.html)?.[1];
+  expect(ogUrl, "story page must declare an og:image").toBeTruthy();
+  const og = await request.get(new URL(ogUrl!).pathname + new URL(ogUrl!).search);
+  expect(og.status(), "og:image must load").toBe(200);
+  out.og = (await og.body()).toString("latin1");
   return out;
 }
 

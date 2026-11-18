@@ -70,13 +70,13 @@ export function SettingsForms({ s, integrations, staff, canStaff, canDemo, demoC
           <F label="Default description" name="defaultDescription" value={s.seo.defaultDescription} textarea />
         </SettingsForm>
       </Section>
-      <Section id="community" title="Comments">
+      <Section id="community" title="Comments" description="Saved now; comments open in Phase 2.">
         <SettingsForm section="community">
           <label className="flex items-start gap-3"><input type="checkbox" name="commentsEnabled" defaultChecked={s.community.commentsEnabled} className="mt-1 size-4 accent-[var(--accent)]" /><span><strong>Allow comments on the site</strong><span className="block text-step-n1 text-ink-muted">You can still turn them off on individual stories.</span></span></label>
           <label className="flex items-start gap-3"><input type="checkbox" name="holdFirstComments" defaultChecked={s.community.holdFirstComments} className="mt-1 size-4 accent-[var(--accent)]" /><span><strong>Hold a reader’s first comment for approval</strong><span className="block text-step-n1 text-ink-muted">Recommended. Once you approve someone, their later comments appear straight away.</span></span></label>
         </SettingsForm>
       </Section>
-      <Section id="membership" title="Membership rules" description="Used once memberships open.">
+      <Section id="membership" title="Membership rules" description="Saved now; used once memberships open (Phase 3).">
         <SettingsForm section="membership">
           <div className="grid gap-4 md:grid-cols-2">
             <F label="Grace period after a failed payment" name="gracePeriodDays" type="number" value={s.membership.gracePeriodDays} hint="(days)" />

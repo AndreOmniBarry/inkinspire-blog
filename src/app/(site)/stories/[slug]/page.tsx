@@ -72,7 +72,7 @@ export default async function StoryPage({ params }: PageProps<"/stories/[slug]">
     author: story.authors.map((a) => ({ "@type": "Person", name: a.name, url: `${siteUrl()}/authors/${a.slug}` })),
     publisher: { "@type": "Organization", name: settings.identity.name, logo: { "@type": "ImageObject", url: `${siteUrl()}/icon.svg` } },
     mainEntityOfPage: url,
-    image: story.cover ? [story.cover.src.startsWith("http") ? story.cover.src : `${siteUrl()}${story.cover.src}`] : [`${url}/opengraph-image`],
+    image: story.cover ? [story.cover.src.startsWith("http") ? story.cover.src : `${siteUrl()}${story.cover.src}`] : [`${siteUrl()}/opengraph-image`],
     wordCount: story.wordCount,
     articleSection: story.category?.name,
     keywords: story.tags.map((t) => t.name).join(", ") || undefined,

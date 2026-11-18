@@ -1,0 +1,40 @@
+name: Scheduled jobs
+
+on:
+  schedule:
+    - cron: "17 * * * *" # hourly backup for the minute job (cron-job.org is the primary, free, every minute)
+    - cron: "41 1 * * *" # nightly encrypted database backup to R2 (02:41 Lagos time)
+  workflow_dispatch:
+
+jobs:
+  tick:
+    if: github.event.schedule == '17 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the minute job
+        run: |
+          if [ -z "${{ secrets.SITE_URL }}" ]; then echo "SITE_URL secret not set yet; skipping."; exit 0; fi
+          curl -fsS -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "${{ secrets.SITE_URL }}/api/cron/tick"
+
+  backup:
+    if: github.event.schedule == '41 1 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+      AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      R2_BACKUP_BUCKET: ${{ secrets.R2_BACKUP_BUCKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL 16 client and age
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSo /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-16 age
+      - name: Encrypted backup to R2
+        run: |
+          if [ -z "$DATABASE_URL" ]; then echo "Backup secrets not set yet; skipping."; exit 0; fi
+          bash scripts/backup.sh
