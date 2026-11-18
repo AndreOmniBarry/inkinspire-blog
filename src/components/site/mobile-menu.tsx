@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
@@ -10,7 +9,7 @@ import { AccountLink } from "./account-link";
 /** Full-height sheet for phones: big tap targets, focus trapped, Esc closes, returns focus. */
 export function MobileMenu({ nav }: { nav: Array<{ label: string; href: string }> }) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+  const [pathname, setPathname] = useState("");
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -20,11 +19,10 @@ export function MobileMenu({ nav }: { nav: Array<{ label: string; href: string }
     if (!open && d.open) d.close();
   }, [open]);
 
-  // Close on navigation.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- route change closes the sheet
-    setOpen(false);
-  }, [pathname]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- current path is only known in the browser
+    if (open) setPathname(window.location.pathname);
+  }, [open]);
 
   return (
     <>
@@ -63,6 +61,7 @@ export function MobileMenu({ nav }: { nav: Array<{ label: string; href: string }
                   <Link
                     href={item.href}
                     aria-current={pathname === item.href ? "page" : undefined}
+                    onClick={() => setOpen(false)}
                     className="block py-2.5 font-display text-step-3 leading-tight aria-[current=page]:text-accent"
                   >
                     {item.label}
@@ -78,7 +77,7 @@ export function MobileMenu({ nav }: { nav: Array<{ label: string; href: string }
             </div>
             <div className="flex items-center justify-between border-t border-rule pt-5">
               <AccountLink className="text-step-0 font-semibold underline-offset-4 hover:underline" />
-              <Link href="/membership" className="rounded-full bg-accent px-5 py-2.5 text-step-n1 font-semibold text-on-accent">
+              <Link href="/membership" onClick={() => setOpen(false)} className="rounded-full bg-accent px-5 py-2.5 text-step-n1 font-semibold text-on-accent">
                 Become a member
               </Link>
             </div>

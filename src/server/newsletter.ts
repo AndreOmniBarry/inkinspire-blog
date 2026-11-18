@@ -76,7 +76,7 @@ export async function confirmSubscription(token: string, unsubToken: string | nu
 }
 
 export function unsubscribeUrlFor(token: string) {
-  return `${env.SITE_URL}/newsletter/unsubscribe?token=${encodeURIComponent(token)}`;
+  return `${env.SITE_URL}/api/newsletter/unsubscribe?token=${encodeURIComponent(token)}`;
 }
 
 export async function unsubscribe(token: string): Promise<"unsubscribed" | "invalid"> {

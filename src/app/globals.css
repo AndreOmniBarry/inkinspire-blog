@@ -351,3 +351,10 @@ html[data-focus-mode] main {
     color: var(--ink);
   }
 }
+
+.search-snippet mark {
+  background: color-mix(in srgb, var(--gilt) 30%, transparent);
+  color: var(--ink);
+  border-radius: 2px;
+  padding: 0 0.1em;
+}
