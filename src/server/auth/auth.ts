@@ -100,7 +100,8 @@ export const auth = betterAuth({
     },
   },
   rateLimit: {
-    enabled: env.NODE_ENV !== "test",
+    // DANGEROUSLY_DISABLE_RATE_LIMITS exists only for the automated end-to-end suite; never set it on a real site.
+    enabled: env.NODE_ENV !== "test" && process.env.DANGEROUSLY_DISABLE_RATE_LIMITS !== "1",
     storage: "database",
     window: 60,
     max: 60,
@@ -170,7 +171,7 @@ export const auth = betterAuth({
   plugins: [
     twoFactor({
       issuer: "Inkinspire",
-      backupCodeOptions: { amount: 10, length: 10 },
+      backupCodeOptions: { amount: 10, length: 10, storeBackupCodes: "encrypted" },
     }),
     haveIBeenPwned({
       customPasswordCompromisedMessage:

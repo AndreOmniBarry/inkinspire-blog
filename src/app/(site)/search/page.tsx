@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { Search as SearchIcon } from "lucide-react";
 import { searchStories, suggest } from "@/server/content/search";
 import { getCategories } from "@/server/content/public";
@@ -45,6 +46,7 @@ async function Results({ searchParams }: Pick<PageProps<"/search">, "searchParam
   const category = typeof sp.category === "string" ? sp.category : undefined;
   const [hits, cats] = await Promise.all([searchStories(q, category), getCategories()]);
   if (q.trim().length >= 2) {
+    await connection();
     // Search terms power the owner's analytics ("what readers look for"). No personal data.
     await db.insert(schema.analyticsEvents).values({ type: "search", query: q.trim().toLowerCase().slice(0, 120), path: "/search" });
   }

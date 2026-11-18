@@ -40,7 +40,9 @@ export async function POST(req: Request) {
   } catch {
     referrerHost = null;
   }
-  await db.insert(schema.analyticsEvents).values({
+  await db
+    .insert(schema.analyticsEvents)
+    .values({
     type: d.type,
     postId: d.postId,
     path: d.path,
@@ -51,6 +53,8 @@ export async function POST(req: Request) {
     seconds: d.seconds,
     query: d.query,
     visitorHash,
-  });
+  })
+    // A story deleted (or an id from a stale page) must never turn a beacon into an error.
+    .catch(() => undefined);
   return new Response(null, { status: 204 });
 }

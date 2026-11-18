@@ -7,6 +7,7 @@ import { db, schema } from "@/server/db";
  * Returns true when the action is allowed.
  */
 export async function rateLimit(key: string, max: number, windowSeconds: number): Promise<boolean> {
+  if (process.env.DANGEROUSLY_DISABLE_RATE_LIMITS === "1") return true;
   const now = Date.now();
   const windowStart = now - windowSeconds * 1000;
   const k = `app:${key}`;

@@ -312,3 +312,70 @@ html[data-reading-font="sans"] .prose-ink .ink-verse {
   height: 1px;
   background: repeating-linear-gradient(90deg, var(--gilt) 0 6px, transparent 6px 11px);
 }
+
+/* ───────────── Studio editor canvas ───────────── */
+.ink-editor {
+  min-height: 50vh;
+  padding-bottom: 30vh;
+}
+.ink-editor p.is-empty:first-child::before,
+.ink-editor p.is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--ink-muted);
+  opacity: 0.7;
+}
+.ink-editor .ink-verse-editor {
+  white-space: pre-wrap;
+  font-family: var(--font-reading);
+  line-height: 1.6;
+  tab-size: 4;
+  padding: 0.6em 0 0.6em 1em;
+  border-left: 2px solid color-mix(in srgb, var(--gilt) 50%, transparent);
+}
+.ink-block-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  user-select: none;
+}
+.ink-block-label {
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gilt-ink);
+}
+.ink-editor .is-selected,
+.ink-editor .ProseMirror-selectednode {
+  outline: 2px solid color-mix(in srgb, var(--focus) 60%, transparent);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+.ink-editor:focus-visible {
+  outline: none;
+}
+/* Focus mode: everything fades except the paragraph you're writing. */
+.is-focus-mode [data-editor-chrome] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+.is-focus-mode [data-editor-chrome]:hover,
+.is-focus-mode [data-editor-chrome]:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+.is-focus-mode .ink-editor > * {
+  opacity: 0.28;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.is-focus-mode .ink-editor > .has-focus {
+  opacity: 1;
+}

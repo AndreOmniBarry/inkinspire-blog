@@ -8,7 +8,7 @@ import type { CategoryColour } from "@/styles/tokens";
 /**
  * Public, cacheable reads for the Publication.
  *
- * SECURITY: this module never selects `posts.body_html` or `posts.content_json`. The protected part
+ * SECURITY: this module never selects the protected body or the source document. The protected part
  * of a premium story is only reachable through src/server/content/protected.ts, after an
  * entitlement check. tests/unit/public-columns.test.ts enforces this.
  */
@@ -32,8 +32,12 @@ async function applyScheduleAwareLife(defaultSeconds = 3600) {
     .where(and(eq(posts.status, "scheduled"), gt(posts.scheduledAt, sql`now()`)));
   const at = row?.at ? new Date(row.at).getTime() : null;
   const untilNext = at ? Math.max(1, Math.ceil((at - Date.now()) / 1000)) : defaultSeconds;
-  const revalidate = Math.min(defaultSeconds, untilNext);
-  cacheLife({ stale: Math.min(60, revalidate), revalidate, expire: Math.max(revalidate * 4, 3600) });
+  if (untilNext < defaultSeconds) {
+    // A scheduled story is due before the normal lifetime ends: expire exactly then, never serve stale.
+    cacheLife({ stale: Math.min(30, untilNext), revalidate: untilNext, expire: untilNext });
+  } else {
+    cacheLife({ stale: 60, revalidate: defaultSeconds, expire: Math.max(defaultSeconds * 4, 3600) });
+  }
 }
 
 export type StoryCover = {
@@ -255,7 +259,7 @@ export async function getStory(slug: string): Promise<PublicStory | null> {
     .select({
       ...cardColumns,
       status: posts.status,
-      previewHtml: posts.previewHtml, // never body_html
+      previewHtml: posts.previewHtml, // the public part only
       hasPaywall: posts.hasPaywall,
       wordCount: posts.wordCount,
       seoTitle: posts.seoTitle,

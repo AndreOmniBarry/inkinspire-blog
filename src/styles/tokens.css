@@ -51,6 +51,8 @@
   --success: #2F6A3F;
   --warning: #8A5A00;
   --danger: #A3222F;
+  --chart1: #A3364A;
+  --chart2: #B08A3E;
   --cat-oxblood-bg: #EBD8D6;
   --cat-oxblood-ink: #4A1219;
   --cat-indigo-bg: #DCDFEC;
@@ -88,6 +90,8 @@
   --success: #2E6339;
   --warning: #7E5200;
   --danger: #9C1F2B;
+  --chart1: #A3364A;
+  --chart2: #A27C30;
   --cat-oxblood-bg: #E5CFC6;
   --cat-oxblood-ink: #4A1219;
   --cat-indigo-bg: #D9D7DD;
@@ -125,6 +129,8 @@
   --success: #86C496;
   --warning: #E2B45C;
   --danger: #F08C95;
+  --chart1: #CC5A72;
+  --chart2: #B38A30;
   --cat-oxblood-bg: #3A1D20;
   --cat-oxblood-ink: #F2D3D5;
   --cat-indigo-bg: #1F2338;
@@ -164,6 +170,8 @@
     --success: #86C496;
     --warning: #E2B45C;
     --danger: #F08C95;
+    --chart1: #CC5A72;
+    --chart2: #B38A30;
     --cat-oxblood-bg: #3A1D20;
     --cat-oxblood-ink: #F2D3D5;
     --cat-indigo-bg: #1F2338;

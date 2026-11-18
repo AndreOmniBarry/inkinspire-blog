@@ -49,6 +49,9 @@ type Palette = {
   success: string;
   warning: string;
   danger: string;
+  /** Chart series, validated with the dataviz palette checks (lightness band, chroma, CVD separation). */
+  chart1: string;
+  chart2: string;
   /** Category covers: [background, ink]. */
   categories: Record<CategoryColour, [string, string]>;
 };
@@ -72,6 +75,8 @@ export const palettes: Record<ThemeName, Palette> = {
     success: "#2F6A3F",
     warning: "#8A5A00",
     danger: "#A3222F",
+    chart1: "#A3364A",
+    chart2: "#B08A3E",
     categories: {
       oxblood: ["#EBD8D6", "#4A1219"],
       indigo: ["#DCDFEC", "#1F2752"],
@@ -101,6 +106,8 @@ export const palettes: Record<ThemeName, Palette> = {
     success: "#2E6339",
     warning: "#7E5200",
     danger: "#9C1F2B",
+    chart1: "#A3364A",
+    chart2: "#A27C30",
     categories: {
       oxblood: ["#E5CFC6", "#4A1219"],
       indigo: ["#D9D7DD", "#1F2752"],
@@ -130,6 +137,8 @@ export const palettes: Record<ThemeName, Palette> = {
     success: "#86C496",
     warning: "#E2B45C",
     danger: "#F08C95",
+    chart1: "#CC5A72",
+    chart2: "#B38A30",
     categories: {
       oxblood: ["#3A1D20", "#F2D3D5"],
       indigo: ["#1F2338", "#D7DBF2"],
@@ -177,6 +186,8 @@ export const contrastPairs: Array<{
   { fg: "warning", bg: "surface", note: "warning messages" },
   { fg: "danger", bg: "surface", note: "error messages" },
   { fg: "danger", bg: "bg", note: "error messages on page" },
+  { fg: "chart1", bg: "surface", large: true, note: "chart series 1 (non-text, 3:1)" },
+  { fg: "chart2", bg: "surface", large: true, note: "chart series 2 (non-text, 3:1)" },
 ];
 
 /** Fluid modular type scale (ratio ≈ 1.25 on mobile → 1.333 on desktop), 360px → 1440px. */
