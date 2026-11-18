@@ -27,7 +27,7 @@ jobs:
       R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
       R2_BACKUP_BUCKET: ${{ secrets.R2_BACKUP_BUCKET }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install PostgreSQL 16 client and age
         run: |
           sudo install -d /usr/share/postgresql-common/pgdg
