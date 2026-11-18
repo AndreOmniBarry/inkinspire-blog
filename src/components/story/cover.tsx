@@ -36,7 +36,7 @@ export function Cover({
         <picture>
           {cover.avifSet && <source type="image/avif" srcSet={cover.avifSet} sizes={sizes} />}
           {cover.srcSet && <source type="image/webp" srcSet={cover.srcSet} sizes={sizes} />}
-          {/* eslint-disable-next-line @next/next/no-img-element -- variants are pre-generated at upload; no runtime optimiser cost */}
+          { }
           <img
             src={cover.src}
             alt={cover.alt}

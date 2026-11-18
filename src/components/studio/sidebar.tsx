@@ -23,7 +23,8 @@ export function StudioSidebar({ items, user, canWrite }: { items: NavItem[]; use
   const signOut = async () => {
     await authClient.signOut();
     setSignedInHint(false);
-    window.location.href = "/";
+    // A full page load clears every cached Studio view after signing out.
+    window.location.assign(new URL("/", window.location.origin));
   };
 
   const nav = (

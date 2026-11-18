@@ -72,11 +72,13 @@ export function StoryEditor({ post, options }: { post: EditorPost; options: Edit
   const [historyOpen, setHistoryOpen] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [mediaFor, setMediaFor] = useState<"cover" | "inline" | null>(null);
-  const [stats, setStats] = useState({ words: post.meta ? 0 : 0, minutes: 1 });
+  const [stats, setStats] = useState({ words: 0, minutes: 1 });
   const baseUpdatedAt = useRef(post.updatedAt);
   const dirty = useRef(false);
-  const metaRef = useRef(meta);
-  metaRef.current = { ...meta, coverMediaId: cover?.id ?? null };
+  const metaRef = useRef<EditorMeta>({ ...meta, coverMediaId: cover?.id ?? null });
+  useEffect(() => {
+    metaRef.current = { ...meta, coverMediaId: cover?.id ?? null };
+  }, [meta, cover]);
   const draftKey = `ink:draft:${post.id}`;
 
   const editor = useEditor({
@@ -128,6 +130,7 @@ export function StoryEditor({ post, options }: { post: EditorPost; options: Edit
 
   useEffect(() => {
     if (!editor) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- word count comes from the editor instance, available only after mount
     updateStats(editor);
     const on = () => updateStats(editor);
     editor.on("update", on);
@@ -146,6 +149,7 @@ export function StoryEditor({ post, options }: { post: EditorPost; options: Edit
       if (new Date(local.at).getTime() > new Date(post.updatedAt).getTime() + 2000) {
         if (window.confirm("You have unsaved changes from an earlier session on this device. Restore them?")) {
           editor.commands.setContent(local.doc);
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- restoring device-saved work happens once, after mount
           setMeta(local.meta);
           markDirty();
         } else localStorage.removeItem(draftKey);
@@ -158,7 +162,8 @@ export function StoryEditor({ post, options }: { post: EditorPost; options: Edit
   const doSave = useCallback(
     async (reason: "autosave" | "manual" = "autosave") => {
       if (!editor) return false;
-      const doc = editor.getJSON() as Doc;
+      // ProseMirror attrs have no prototype; React's action serialiser needs plain objects.
+      const doc = JSON.parse(JSON.stringify(editor.getJSON())) as Doc;
       const m = metaRef.current;
       try {
         localStorage.setItem(draftKey, JSON.stringify({ at: new Date().toISOString(), doc, meta: m }));
@@ -284,7 +289,7 @@ export function StoryEditor({ post, options }: { post: EditorPost; options: Edit
           <Link href="/studio/library" className="inline-flex size-10 items-center justify-center rounded-full hover:bg-sunken" aria-label="Back to stories">
             <ArrowLeft aria-hidden size={18} />
           </Link>
-          <span className="hidden rounded-full bg-sunken px-2.5 py-1 text-step-n2 font-semibold sm:inline">{statusLabel[status]}</span>
+          <span className="shrink-0 rounded-full bg-sunken px-2.5 py-1 text-step-n2 font-semibold">{statusLabel[status]}</span>
           <span className={clsx("flex items-center gap-1.5 text-step-n2", save === "error" || save === "conflict" ? "text-danger" : "text-ink-muted")} role="status" aria-live="polite" title={saveError ?? undefined}>
             {saveIndicator.icon}
             <span className="hidden xs:inline">{saveIndicator.text}</span>

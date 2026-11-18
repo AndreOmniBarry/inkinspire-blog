@@ -24,7 +24,7 @@ export function PageEditor({ page }: { page: { id: string; slug: string; kind: s
   });
   const save = () =>
     start(async () => {
-      const r = await savePage({ id: page.id, title, seoDescription: seo || null, contentJson: editor!.getJSON() as Doc });
+      const r = await savePage({ id: page.id, title, seoDescription: seo || null, contentJson: JSON.parse(JSON.stringify(editor!.getJSON())) as Doc });
       setMsg(r.ok ? "Saved and published." : (r.error ?? "Could not save."));
     });
   const href = page.kind === "legal" ? `/legal/${page.slug}` : `/${page.slug}`;

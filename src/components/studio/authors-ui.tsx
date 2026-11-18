@@ -59,7 +59,10 @@ function AuthorForm({ author, recent, onClose }: { author: A | null; recent: Pic
         <input type="hidden" name="id" value={author?.id ?? ""} />
         <input type="hidden" name="photoMediaId" value={photo?.id ?? ""} />
         <div className="flex items-center gap-4">
-          <div className="size-20 overflow-hidden rounded-full bg-sunken">{/* eslint-disable-next-line @next/next/no-img-element -- preview */}{photo && <img src={photo.src} alt="" className="h-full w-full object-cover" />}</div>
+          <div className="size-20 overflow-hidden rounded-full bg-sunken">
+            {/* eslint-disable-next-line @next/next/no-img-element -- preview of a pre-optimised upload */}
+            {photo && <img src={photo.src} alt="" className="h-full w-full object-cover" />}
+          </div>
           <button type="button" onClick={() => setPicking(true)} className="share-pill">{photo ? "Change photo" : "Add a photo"}</button>
           {photo && <button type="button" onClick={() => setPhoto(null)} className="text-step-n1 text-ink-soft underline">Remove</button>}
         </div>

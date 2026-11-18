@@ -16,7 +16,7 @@ test("an editor writes, publishes, and the story appears on the site @mobile", a
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   await page.goto(`/stories/${slug}`);
   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
-  await expect(page.getByText("The light came in slowly")).toBeVisible();
+  await expect(page.locator("#story-body").getByText("The light came in slowly")).toBeVisible();
 });
 
 test("an author can submit for review but cannot publish", async ({ page }) => {

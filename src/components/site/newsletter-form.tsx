@@ -59,7 +59,7 @@ export function NewsletterForm({
           {state.message}
         </p>
       ) : (
-        <p id={`${id}-hint`} className="mt-2 text-step-n2 text-ink-muted">
+        <p id={`${id}-hint`} className={clsx("mt-2 text-step-n2", tone === "inverse" ? "opacity-85" : "text-ink-muted")}>
           Free. New stories only, never spam. Unsubscribe with one click.
         </p>
       )}

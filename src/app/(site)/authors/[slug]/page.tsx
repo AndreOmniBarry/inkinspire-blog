@@ -7,6 +7,14 @@ import { SocialLinks } from "@/components/site/social-links";
 import { JsonLd, siteUrl } from "@/components/seo/json-ld";
 import { plural } from "@/lib/format";
 
+
+/**
+ * Addresses published after a deploy (new stories, themes, authors) render on first visit and are then
+ * cached. `instant = false` lets that first render wait for the data instead of streaming a generic
+ * shell, so unknown addresses get a real 404 and new ones work immediately.
+ */
+export const instant = false;
+
 export async function generateStaticParams() {
   return (await getAuthors()).map((a) => ({ slug: a.slug }));
 }

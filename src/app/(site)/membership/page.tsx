@@ -90,7 +90,7 @@ export default async function MembershipPage() {
             <p className="mx-auto mt-4 max-w-[44ch] font-reading text-step-1 opacity-85">
               Subscribe to the newsletter and you’ll be the first to know, with a founding-member welcome when it opens.
             </p>
-            <NewsletterForm source="newsletter-page" className="mx-auto mt-8 max-w-lg text-left" />
+            <NewsletterForm source="newsletter-page" tone="inverse" className="mx-auto mt-8 max-w-lg text-left" />
           </section>
         )}
         <p className="mx-auto mt-10 max-w-2xl text-center text-step-n1 text-ink-muted">

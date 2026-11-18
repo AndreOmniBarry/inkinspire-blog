@@ -4,6 +4,14 @@ import { Suspense } from "react";
 import { ListingSkeleton, PageIntro, StoryListing, parseListParams } from "@/components/story/story-listing";
 import { getCollection, getCollections } from "@/server/content/public";
 
+
+/**
+ * Addresses published after a deploy (new stories, themes, authors) render on first visit and are then
+ * cached. `instant = false` lets that first render wait for the data instead of streaming a generic
+ * shell, so unknown addresses get a real 404 and new ones work immediately.
+ */
+export const instant = false;
+
 export async function generateStaticParams() {
   return (await getCollections()).map((c) => ({ slug: c.slug }));
 }

@@ -1,5 +1,5 @@
 import { createOTP } from "@better-auth/utils/otp";
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 export const TEST_PASSWORD = "Quiet-river-at-dawn-42";
 export const TEST_TOTP_SECRET = "inkinspire-test-totp-secret-0001";
@@ -19,7 +19,9 @@ export async function signIn(page: Page, email: string, opts: { twoFactor?: bool
     await page.getByLabel("6-digit code").fill(await totp());
     await page.getByRole("button", { name: "Verify and sign in" }).click();
   }
-  await page.waitForURL((u) => !u.pathname.startsWith("/login"));
+  // The app redirects (and refreshes) after sign-in; wait for it to settle away from /login.
+  await expect(page).not.toHaveURL(/\/login/, { timeout: 15_000 });
+  await page.waitForLoadState("networkidle").catch(() => {});
 }
 
 export const roleEmail = (role: string) => `${role}@test.inkinspire.local`;

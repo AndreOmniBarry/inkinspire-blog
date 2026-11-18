@@ -16,6 +16,14 @@ import { NewsletterForm } from "@/components/site/newsletter-form";
 import { JsonLd, breadcrumbJsonLd, siteUrl } from "@/components/seo/json-ld";
 import { formatDate, readingTime } from "@/lib/format";
 
+
+/**
+ * Addresses published after a deploy (new stories, themes, authors) render on first visit and are then
+ * cached. `instant = false` lets that first render wait for the data instead of streaming a generic
+ * shell, so unknown addresses get a real 404 and new ones work immediately.
+ */
+export const instant = false;
+
 export async function generateStaticParams() {
   const { stories } = await getSitemapEntries();
   return stories.map((s) => ({ slug: s.slug }));

@@ -35,6 +35,13 @@ export function SlashMenu({ editor, items }: { editor: Editor | null; items: Sla
     [items, state],
   );
 
+  const choose = (item: SlashItem) => {
+    if (!editor || !state) return;
+    const { $from } = editor.state.selection;
+    editor.chain().focus().deleteRange({ from: state.from, to: $from.pos }).run();
+    item.run(editor);
+    setState(null);
+  };
   useEffect(() => {
     if (!editor || !state) return;
     const onKey = (e: KeyboardEvent) => {
@@ -57,13 +64,7 @@ export function SlashMenu({ editor, items }: { editor: Editor | null; items: Sla
     return () => window.removeEventListener("keydown", onKey, true);
   });
 
-  const choose = (item: SlashItem) => {
-    if (!editor || !state) return;
-    const { $from } = editor.state.selection;
-    editor.chain().focus().deleteRange({ from: state.from, to: $from.pos }).run();
-    item.run(editor);
-    setState(null);
-  };
+
 
   if (!state || !filtered.length) return null;
   return (

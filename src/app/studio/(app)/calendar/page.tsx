@@ -6,11 +6,15 @@ import { EditorialCalendar } from "@/components/studio/calendar";
 
 export const metadata = { title: "Calendar" };
 
+/** Today's date in Lagos (UTC+1, no daylight saving). */
+function lagosToday() {
+  return new Date(Date.now() + 3600_000).toISOString().slice(0, 10);
+}
+
 export default async function CalendarPage({ searchParams }: PageProps<"/studio/calendar">) {
   await requireStaff("post.publish");
   const sp = await searchParams;
-  const lagosNow = new Date(Date.now() + 3600_000);
-  const today = lagosNow.toISOString().slice(0, 10);
+  const today = lagosToday();
   const month = typeof sp.month === "string" && /^\d{4}-\d{2}$/.test(sp.month) ? sp.month : today.slice(0, 7);
   const [y, m] = month.split("-").map(Number);
   const from = new Date(Date.UTC(y, m - 1, 1) - 7 * 864e5);
