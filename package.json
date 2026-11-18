@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "tokens": "tsx --conditions=react-server scripts/tokens.ts",
     "check:tokens": "tsx --conditions=react-server scripts/tokens.ts --check",
     "check:contrast": "tsx --conditions=react-server scripts/check-contrast.ts",
