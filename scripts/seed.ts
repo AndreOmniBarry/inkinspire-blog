@@ -77,7 +77,10 @@ async function main() {
     ])
     .onConflictDoNothing();
 
-  if (withDemo && author) {
+  // Demo stories go only into a publication with no stories yet, so "Remove demo content"
+  // stays removed even though the seed runs on every deploy.
+  const [{ n: postCount }] = await db.select({ n: sql<number>`count(*)::int` }).from(s.posts);
+  if (withDemo && author && postCount === 0) {
     for (const c of seedCollections) {
       await db.insert(s.collections).values({ ...c, isDemo: true }).onConflictDoNothing({ target: s.collections.slug });
     }

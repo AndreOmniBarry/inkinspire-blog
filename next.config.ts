@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
+
+// On Vercel, use the project's own address until a custom domain is set as SITE_URL.
+if (!process.env.SITE_URL && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+  process.env.SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+}
+/** Preview deployments on *.vercel.app must never be indexed by search engines. */
+const isPreviewHost = /\.vercel\.app$/.test(new URL(process.env.SITE_URL ?? "http://localhost:3000").hostname);
 const mediaOrigin = process.env.R2_PUBLIC_URL ? new URL(process.env.R2_PUBLIC_URL).origin : "";
 
 /**
@@ -60,9 +67,10 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  env: { SITE_URL: process.env.SITE_URL ?? "http://localhost:3000" },
   async headers() {
     return [
-      { source: "/:path*", headers: securityHeaders },
+      { source: "/:path*", headers: isPreviewHost ? [...securityHeaders, { key: "X-Robots-Tag", value: "noindex, nofollow" }] : securityHeaders },
       { source: "/studio/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/account/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
     ];

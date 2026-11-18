@@ -21,7 +21,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "tsx tests/e2e/prepare-db.ts && playwright test --trace off",
-    "screenshots": "tsx --conditions=react-server scripts/screenshots.ts"
+    "screenshots": "tsx --conditions=react-server scripts/screenshots.ts",
+    "vercel-build": "tsx --conditions=react-server scripts/migrate.ts && NODE_ENV=development tsx --conditions=react-server scripts/seed.ts --no-owner && tsx --conditions=react-server scripts/ensure-owner.ts && next build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1171.0",

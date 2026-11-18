@@ -45,7 +45,8 @@ const schema = z.object({
   BACKUP_AGE_RECIPIENT: z.string().optional(),
 });
 
-const parsed = schema.safeParse(process.env);
+const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : undefined;
+const parsed = schema.safeParse({ ...process.env, SITE_URL: process.env.SITE_URL || vercelUrl || undefined });
 if (!parsed.success) {
   console.error("Invalid environment variables:", z.treeifyError(parsed.error));
   throw new Error("Invalid environment variables. See .env.example.");

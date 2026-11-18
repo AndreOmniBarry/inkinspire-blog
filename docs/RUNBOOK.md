@@ -2,6 +2,21 @@
 
 How to deploy, schedule jobs, back up, restore, roll back and handle incidents. Written so a developer the owner hires later can follow it without asking anyone.
 
+## 0. Preview on Vercel (free, for showing the site before launch)
+
+Personal, non-commercial preview use is what Vercel's free Hobby plan is for. The `*.vercel.app` address is automatically hidden from search engines.
+
+1. Sign in at vercel.com with GitHub → **Add New… › Project** → import `inkinspire-blog`. Framework: Next.js (detected). Leave build settings alone (`vercel.json` sets them).
+2. Before the first deploy, open **Storage** (in the project) → **Create Database** → **Neon** (free) → region Frankfurt → connect it to the project. This adds `DATABASE_URL` (and `DATABASE_URL_UNPOOLED`) for you.
+3. **Settings › Environment Variables**, add for *Production*:
+   - `BETTER_AUTH_SECRET` (any 40+ random characters; e.g. from a password generator)
+   - `HASH_SALT` (any 20+ random characters)
+   - `OWNER_EMAIL` (Sylvia's email) and `OWNER_NAME`
+4. **Deploy.** The build creates the tables, seeds the 12 demo stories and the owner account, then builds the site. Open the build log and copy the **one-time password** from the "INKINSPIRE OWNER ACCOUNT" box.
+5. Send Sylvia the `https://<project>.vercel.app` address (and, separately and privately, the one-time password if she should see the Studio at `/studio`).
+
+Limits of the preview: no emails are sent (no Resend key), so new reader sign-ups can't confirm their email; image uploads need R2. Both are fine for showing the design and the Studio.
+
 ## 1. First deployment (free plans)
 
 All accounts are created **in the owner's name** (see `OWNERSHIP-HANDOVER.md`).
