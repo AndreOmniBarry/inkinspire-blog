@@ -34,7 +34,9 @@ export async function SiteHeader() {
           >
             <Search aria-hidden size={20} strokeWidth={1.6} />
           </Link>
-          <ThemeSwitcher compact className="hidden lg:inline-flex" />
+          <div className="hidden lg:block">
+            <ThemeSwitcher compact />
+          </div>
           <AccountLink className="hidden min-h-11 items-center px-2 text-step-n1 font-medium text-ink-soft hover:text-ink md:inline-flex" />
           <Link
             href="/membership"

@@ -24,7 +24,8 @@ for (const path of paths) {
     const page = await ctx.newPage();
     for (const w of widths) {
       await page.setViewportSize({ width: w, height: w < 768 ? 800 : 900 });
-      await page.goto(base + path, { waitUntil: "networkidle" });
+      await page.goto(base + path, { waitUntil: "load" });
+      await page.waitForTimeout(400);
       await page.evaluate(() => document.fonts.ready);
       await page.screenshot({ path: join(dir, `${theme}-${w}.png`), fullPage: process.env.FULL === "1" });
     }
