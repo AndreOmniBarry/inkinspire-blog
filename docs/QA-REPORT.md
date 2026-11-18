@@ -7,7 +7,7 @@ Evidence for the Definition of Done (build brief §13, blueprint §15). Every li
 | Suite | Command | Result |
 |---|---|---|
 | Unit (Vitest) | `pnpm test` | **287 passed**: permissions matrix (every role × every permission), publishing workflow, renderer (escaping, links, verse, paywall split, typography, Markdown round trip), search-highlight escaping, contrast for every token pair, "public modules never read the protected body", slug/diff/password/image-sniff helpers |
-| End-to-end (Playwright, desktop + Pixel 7) | `pnpm test:e2e` | **21 passed**: premium canary (5), permissions per role (6), accessibility (3 themes × 13 pages), publishing from desktop and phone, author review flow, exact scheduling, reader account journey (2) |
+| End-to-end (Playwright, desktop + Pixel 7) | `pnpm test:e2e` | **23 passed**: premium canary (5), permissions per role (6), accessibility (3 themes × 13 pages), 360 px layout (2 themes × 9 pages), publishing from desktop and phone, author review flow, exact scheduling, reader account journey (2) |
 | Token contrast | `pnpm check:contrast` | **102/102** text/background pairs pass WCAG 2.2 AA in Paper, Sepia and Midnight |
 | Lint and types | `pnpm lint`, `pnpm typecheck` | Clean |
 | Dependency audit | `pnpm audit --audit-level high --prod` | Clean, with two reviewed dev-only advisories (see `SECURITY.md`) |
@@ -51,6 +51,8 @@ Measured locally, so network latency to Vercel/Neon from Nigeria is not included
 4. Newsletter hint text failed contrast on the dark membership panel.
 5. Story status was hidden on phones, so the owner couldn't see whether a story was live.
 6. The analytics beacon could error on a deleted story's id.
+7. At 360 px the header pushed the menu button off-screen (a CSS class conflict).
+8. Typecheck failed on a clean CI checkout (route types are generated; now `next typegen` runs first).
 
 ## Not built yet (honest list)
 
