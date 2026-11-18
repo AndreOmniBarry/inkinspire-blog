@@ -26,7 +26,7 @@ jobs:
       BETTER_AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret-00
       HASH_SALT: ci-salt-ci-salt-00
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
@@ -58,7 +58,7 @@ jobs:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/inkinspire_test
       BETTER_AUTH_SECRET: e2e-secret-e2e-secret-e2e-secret-e2e-secret
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: pnpm }
