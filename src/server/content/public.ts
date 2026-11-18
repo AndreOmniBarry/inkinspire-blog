@@ -43,7 +43,7 @@ export type StoryCover = {
   width?: number;
   height?: number;
   alt: string;
-  blurhash: string | null;
+  placeholder: string | null;
   focalX: number;
   focalY: number;
 };
@@ -81,11 +81,11 @@ const cardColumns = {
   coverWidth: media.width,
   coverHeight: media.height,
   coverAlt: media.alt,
-  coverBlurhash: media.blurhash,
+  coverPlaceholder: media.placeholder,
   coverFocalX: media.focalX,
   coverFocalY: media.focalY,
-  authorSlug: sql<string | null>`(select a.slug from ${postAuthors} pa join ${authors} a on a.id = pa.author_id where pa.post_id = ${posts.id} order by pa.position limit 1)`,
-  authorName: sql<string | null>`(select a.name from ${postAuthors} pa join ${authors} a on a.id = pa.author_id where pa.post_id = ${posts.id} order by pa.position limit 1)`,
+  authorSlug: sql<string | null>`(select a.slug from ${postAuthors} pa join ${authors} a on a.id = pa.author_id where pa.post_id = ${sql.raw('"posts"."id"')} order by pa.position limit 1)`,
+  authorName: sql<string | null>`(select a.name from ${postAuthors} pa join ${authors} a on a.id = pa.author_id where pa.post_id = ${sql.raw('"posts"."id"')} order by pa.position limit 1)`,
 };
 
 type CardRow = {
@@ -116,7 +116,7 @@ function toCard(r: CardRow): StoryCard {
             height: r.coverHeight as number | null,
           }),
           alt: r.coverAlt as string,
-          blurhash: (r.coverBlurhash as string) ?? null,
+          placeholder: (r.coverPlaceholder as string) ?? null,
           focalX: r.coverFocalX as number,
           focalY: r.coverFocalY as number,
         }
@@ -312,7 +312,7 @@ export async function getStory(slug: string): Promise<PublicStory | null> {
       tagline: a.tagline,
       bio: a.bio,
       photo: a.photo
-        ? { ...mediaSources(a.photo), alt: a.photo.alt, blurhash: a.photo.blurhash, focalX: a.photo.focalX, focalY: a.photo.focalY }
+        ? { ...mediaSources(a.photo), alt: a.photo.alt, placeholder: a.photo.placeholder, focalX: a.photo.focalX, focalY: a.photo.focalY }
         : null,
     })),
   };
@@ -373,7 +373,7 @@ export async function getCategories(): Promise<CategoryWithCount[]> {
       colour: categories.colour,
       seoTitle: categories.seoTitle,
       seoDescription: categories.seoDescription,
-      storyCount: sql<number>`(select count(*)::int from ${posts} where ${posts.categoryId} = ${categories.id} and ${isLive})`,
+      storyCount: sql<number>`(select count(*)::int from ${posts} where ${posts.categoryId} = ${sql.raw('"categories"."id"')} and ${isLive})`,
     })
     .from(categories)
     .orderBy(asc(categories.position), asc(categories.name));
@@ -409,7 +409,7 @@ export async function getCollections() {
       slug: collections.slug,
       name: collections.name,
       description: collections.description,
-      storyCount: sql<number>`(select count(*)::int from ${posts} where ${posts.collectionId} = ${collections.id} and ${isLive})`,
+      storyCount: sql<number>`(select count(*)::int from ${posts} where ${posts.collectionId} = ${sql.raw('"collections"."id"')} and ${isLive})`,
     })
     .from(collections)
     .orderBy(asc(collections.name));
@@ -434,7 +434,7 @@ export async function getAuthors(): Promise<PublicAuthor[]> {
     .select({
       a: authors,
       photo: media,
-      storyCount: sql<number>`(select count(*)::int from ${postAuthors} pa join ${posts} on ${posts.id} = pa.post_id where pa.author_id = ${authors.id} and ${isLive})`,
+      storyCount: sql<number>`(select count(*)::int from ${postAuthors} pa join ${posts} on ${posts.id} = pa.post_id where pa.author_id = ${sql.raw('"authors"."id"')} and ${isLive})`,
     })
     .from(authors)
     .leftJoin(media, eq(media.id, authors.photoMediaId))
@@ -447,7 +447,7 @@ export async function getAuthors(): Promise<PublicAuthor[]> {
     bio: a.bio,
     socials: a.socials,
     storyCount,
-    photo: photo ? { ...mediaSources(photo), alt: photo.alt, blurhash: photo.blurhash, focalX: photo.focalX, focalY: photo.focalY } : null,
+    photo: photo ? { ...mediaSources(photo), alt: photo.alt, placeholder: photo.placeholder, focalX: photo.focalX, focalY: photo.focalY } : null,
   }));
 }
 

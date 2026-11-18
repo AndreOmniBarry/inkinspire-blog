@@ -243,7 +243,8 @@ export const media = pgTable(
     bytes: integer().notNull(),
     width: integer(),
     height: integer(),
-    blurhash: text(),
+    /** Tiny blurred preview (base64 WebP data URI, ~300 bytes) shown while the image loads. */
+    placeholder: text(),
     focalX: smallint().notNull().default(50), // percent
     focalY: smallint().notNull().default(50),
     alt: text().notNull(),

@@ -1,5 +1,5 @@
 {
-  "id": "e0aeee8c-ef64-4001-aa89-f77c3775b9c7",
+  "id": "589cb9a5-61d3-4454-8bbb-58bc82d9e263",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -2084,8 +2084,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "blurhash": {
-          "name": "blurhash",
+        "placeholder": {
+          "name": "placeholder",
           "type": "text",
           "primaryKey": false,
           "notNull": false

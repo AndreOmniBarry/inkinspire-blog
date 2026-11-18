@@ -9,7 +9,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 export async function SiteHeader() {
   const settings = await getSiteSettings();
   return (
-    <header className="sticky top-0 z-40 border-b border-rule/70 bg-[color-mix(in_srgb,var(--bg)_88%,transparent)] backdrop-blur-md supports-[not(backdrop-filter:blur(1px))]:bg-bg">
+    <header data-site-header className="sticky top-0 z-40 border-b border-rule/70 bg-[color-mix(in_srgb,var(--bg)_88%,transparent)] backdrop-blur-md supports-[not(backdrop-filter:blur(1px))]:bg-bg">
       <div className="container-ink flex h-16 items-center gap-4 md:h-[4.5rem]">
         <Link href="/" className="-ml-1 shrink-0 rounded p-1 text-ink" aria-label={`${settings.identity.name}, home`}>
           <Logo height={26} className="md:hidden" />

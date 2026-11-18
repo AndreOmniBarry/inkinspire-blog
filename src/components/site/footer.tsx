@@ -9,7 +9,7 @@ import { SocialLinks } from "./social-links";
 export async function SiteFooter() {
   const [settings, categories] = await Promise.all([getSiteSettings(), getCategories()]);
   return (
-    <footer className="grain mt-24 border-t border-rule bg-sunken">
+    <footer data-site-footer className="grain mt-24 border-t border-rule bg-sunken">
       <div className="container-ink py-16 md:py-20">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">

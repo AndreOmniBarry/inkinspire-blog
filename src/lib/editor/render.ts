@@ -35,8 +35,23 @@ export function safeHref(href: unknown): string | null {
 
 const isExternal = (href: string) => /^https?:/i.test(href);
 
+/**
+ * Typographic polish applied to every rendered word: curly quotes and apostrophes, ellipses,
+ * en and em dashes. Writers can type plainly; readers get proper typography.
+ */
+export function smarten(text: string): string {
+  return text
+    .replace(/\.\.\./g, "…")
+    .replace(/---/g, "—")
+    .replace(/--/g, "–")
+    .replace(/(^|[\s(\[{\u2014\u2013-])"/g, "$1\u201C")
+    .replace(/"/g, "\u201D")
+    .replace(/(^|[\s(\[{\u201C\u2014\u2013-])'/g, "$1\u2018")
+    .replace(/'/g, "\u2019");
+}
+
 function renderMarks(text: string, marks: Mark[] | undefined): string {
-  let out = esc(text);
+  let out = esc(marks?.some((m) => m.type === "code") ? text : smarten(text));
   if (!marks?.length) return out;
   // Stable order: link outermost, then bold, italic, others.
   const order = ["code", "strike", "underline", "smallCaps", "italic", "bold", "link"];

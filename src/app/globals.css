@@ -318,3 +318,36 @@
     opacity: 1;
   }
 }
+
+/* Focus mode: only the words remain. */
+html[data-focus-mode] header[data-site-header],
+html[data-focus-mode] footer[data-site-footer],
+html[data-focus-mode] [data-hide-in-focus] {
+  display: none !important;
+}
+html[data-focus-mode] main {
+  padding-top: 3rem;
+}
+
+@layer components {
+  .share-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: var(--step-n1);
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition:
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+  .share-pill:hover {
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
+}

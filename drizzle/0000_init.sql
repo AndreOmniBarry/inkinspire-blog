@@ -263,7 +263,7 @@ CREATE TABLE "media" (
 	"bytes" integer NOT NULL,
 	"width" integer,
 	"height" integer,
-	"blurhash" text,
+	"placeholder" text,
 	"focal_x" smallint DEFAULT 50 NOT NULL,
 	"focal_y" smallint DEFAULT 50 NOT NULL,
 	"alt" text NOT NULL,
